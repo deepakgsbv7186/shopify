@@ -1,44 +1,23 @@
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {COLOR} from '../../utils/theme/colors';
+import {FlatList} from 'react-native';
+import React, {useEffect} from 'react';
 import WrapperLayout from '../../components/WrapperLayout';
-import {FONT} from '../../assets/fonts';
-import {
-  height,
-  moderateScale,
-  moderateScaleVertical,
-  textScale,
-  width,
-} from '../../utils/theme/responsive';
-import API from '../../api';
+import {moderateScale} from '../../utils/theme/responsive';
 import Loader from '../../components/Loader';
 import ProductCard from '../../components/ProductCard';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchProducts} from '../../app/products/productsSlice';
 
 export default function Home() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const getProducts = async () => {
-    setLoading(true);
-    try {
-      const response = await API.get('/products');
-      if (response?.status === 200) {
-        setProducts(response?.data?.products);
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      setLoading(false);
-      throw error;
-    }
-  };
+  const dispatch = useDispatch();
+  const {isLoading, products, isError} = useSelector(state => state.products);
 
   useEffect(() => {
-    getProducts();
+    dispatch(fetchProducts());
   }, []);
   return (
     <WrapperLayout>
       <FlatList
-        data={products}
+        data={products?.products}
         numColumns={2}
         columnWrapperStyle={{
           justifyContent: 'space-between',
@@ -49,9 +28,7 @@ export default function Home() {
           marginHorizontal: moderateScale(16),
         }}
       />
-      <Loader loading={loading} />
+      <Loader loading={isLoading} />
     </WrapperLayout>
   );
 }
-
-const styles = StyleSheet.create({});
