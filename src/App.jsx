@@ -1,14 +1,20 @@
-import {View, Text} from 'react-native';
+import {StatusBar} from 'react-native';
 import React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {NavigationContainer} from '@react-navigation/native';
+import RouteNavigation from './navigations/RouteNavigation';
+import {COLOR} from './utils/theme/colors';
 
 export default function App() {
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>App</Text>
-      <Icon.Button name="facebook" backgroundColor="#3b5998">
-        <Text style={{color: 'white', fontSize: 15}}>Login with Facebook</Text>
-      </Icon.Button>
-    </View>
+    <>
+      <StatusBar
+        translucent
+        barStyle={'light-content'}
+        backgroundColor={COLOR.transparent}
+      />
+      <NavigationContainer>
+        <RouteNavigation />
+      </NavigationContainer>
+    </>
   );
 }
