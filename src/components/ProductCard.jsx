@@ -1,5 +1,6 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {
   height,
   moderateScale,
@@ -10,9 +11,18 @@ import {
 import {COLOR} from '../utils/theme/colors';
 import {FONT} from '../assets/fonts';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {addToWish, removeFromWish} from '../app/wishlist/wishlistSlice';
 
 export default function ProductCard({item}) {
   const navigation = useNavigation();
+  const {wishproducts} = useSelector(state => state.wishList);
+  const isWish = wishproducts.find(product => product?.id === item?.id);
+  const dispatch = useDispatch();
+
+  const handleWish = () =>
+    isWish ? dispatch(removeFromWish(item?.id)) : dispatch(addToWish(item));
+
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -25,6 +35,15 @@ export default function ProductCard({item}) {
           resizeMode="cover"
           style={styles.coverImage}
         />
+        <TouchableOpacity
+          onPress={handleWish}
+          style={{position: 'absolute', right: 10, top: 10}}>
+          <AntDesign
+            name={isWish ? 'heart' : 'hearto'}
+            color={isWish ? COLOR.red : COLOR.white}
+            size={20}
+          />
+        </TouchableOpacity>
       </View>
       <View style={styles.titleCategoryContainer}>
         <View style={{flexDirection: 'row'}}>
@@ -47,6 +66,7 @@ const styles = StyleSheet.create({
     width: width * 0.44,
     height: height * 0.2,
     borderRadius: moderateScale(10),
+    position: 'relative',
   },
   coverImage: {
     width: '100%',

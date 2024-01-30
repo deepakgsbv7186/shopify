@@ -10,3 +10,6 @@ npm i react-native-vector-icons
 npm install @react-navigation/native
 npm install react-native-screens react-native-safe-area-context
 npm install @react-navigation/native-stack
+
+
+KeyStore: TestKeystore.jks 12345678

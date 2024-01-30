@@ -20,11 +20,15 @@ import {
 import {COLOR} from '../../utils/theme/colors';
 import {FONT} from '../../assets/fonts';
 import Button from '../../components/Button';
+import {useDispatch, useSelector} from 'react-redux';
+import {addToWish, removeFromWish} from '../../app/wishlist/wishlistSlice';
 
 export default function ProductScreen() {
   const route = useRoute();
   const navigation = useNavigation();
+  const productDetail = route.params.productDetail;
   const {
+    id,
     thumbnail,
     title,
     description,
@@ -33,12 +37,26 @@ export default function ProductScreen() {
     discountPercentage,
     stock,
     brand,
-  } = route.params.productDetail;
+  } = productDetail;
+
+  const dispatch = useDispatch();
+  const {wishproducts} = useSelector(state => state.wishList);
+  const isWish = wishproducts.find(product => product?.id === id);
+
   const discountedPrice = (price - (price / 100) * discountPercentage).toFixed(
     2,
   );
+
+  const handleWish = () =>
+    isWish ? dispatch(removeFromWish(id)) : dispatch(addToWish(productDetail));
+
   return (
-    <View style={{flex: 1, position: 'relative'}}>
+    <View
+      style={{
+        flex: 1,
+        position: 'relative',
+        backgroundColor: COLOR.blackOpacity80,
+      }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: moderateScaleVertical(100)}}>
@@ -54,8 +72,13 @@ export default function ProductScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
+              onPress={handleWish}
               style={{...styles.headIconContainer, alignItems: 'flex-end'}}>
-              <AntDesign name="heart" color={COLOR.red} size={24} />
+              <AntDesign
+                name={isWish ? 'heart' : 'hearto'}
+                color={isWish ? COLOR.red : COLOR.white}
+                size={24}
+              />
             </TouchableOpacity>
           </View>
         </ImageBackground>

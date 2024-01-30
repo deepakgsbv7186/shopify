@@ -6,6 +6,7 @@ import Loader from '../../components/Loader';
 import ProductCard from '../../components/ProductCard';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchProducts} from '../../app/products/productsSlice';
+import Header from '../../components/Header';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -16,9 +17,11 @@ export default function Home() {
   }, []);
   return (
     <WrapperLayout>
+      <Header brand={'Shopify'} />
       <FlatList
         data={products?.products}
         numColumns={2}
+        showsVerticalScrollIndicator={false}
         columnWrapperStyle={{
           justifyContent: 'space-between',
           paddingVertical: 10,
