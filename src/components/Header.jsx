@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {COLOR} from '../utils/theme/colors';
@@ -16,9 +10,13 @@ import {
 } from '../utils/theme/responsive';
 import {FONT} from '../assets/fonts';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 export default function Header({brand = ''}) {
   const navigation = useNavigation();
+  const {cartproducts} = useSelector(state => state.cartList);
+  const itemsInCart = cartproducts?.length;
+
   return (
     <View style={styles.container}>
       {brand.length ? (
@@ -30,26 +28,6 @@ export default function Header({brand = ''}) {
           <AntDesign name="leftcircleo" color={COLOR.white} size={24} />
         </TouchableOpacity>
       )}
-
-      {/* <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          borderWidth: 1,
-          borderColor: COLOR.graydarkshade,
-          borderRadius: moderateScale(10),
-          paddingHorizontal: moderateScale(10),
-        }}>
-        <TextInput
-          placeholder="Search"
-          placeholderTextColor={COLOR.gray}
-          style={{
-            color: COLOR.white,
-            fontFamily: FONT.Poppins400,
-            fontSize: textScale(14),
-          }}
-        />
-      </View> */}
       <View style={styles.wishCartContainer}>
         <TouchableOpacity
           onPress={() => navigation.navigate('WishListScreen')}
@@ -58,7 +36,16 @@ export default function Header({brand = ''}) {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.navigate('CartScreen')}
-          style={{...styles.headIconContainer, alignItems: 'flex-end'}}>
+          style={{
+            ...styles.headIconContainer,
+            alignItems: 'flex-end',
+            position: 'relative',
+          }}>
+          {itemsInCart > 0 && (
+            <View style={styles.cartNumberContainer}>
+              <Text style={styles.cartNumberText}>{itemsInCart}</Text>
+            </View>
+          )}
           <AntDesign name="shoppingcart" color={COLOR.white} size={28} />
         </TouchableOpacity>
       </View>
@@ -90,5 +77,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     columnGap: moderateScale(10),
+  },
+  cartNumberContainer: {
+    position: 'absolute',
+    zIndex: 10,
+    backgroundColor: COLOR.red,
+    width: scale(20),
+    height: scale(20),
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 0,
+    right: -8,
+    borderRadius: 999,
+  },
+  cartNumberText: {
+    textAlign: 'center',
+    fontFamily: FONT.Poppins500,
+    fontSize: textScale(11),
+    color: COLOR.white,
+    lineHeight: 24,
   },
 });

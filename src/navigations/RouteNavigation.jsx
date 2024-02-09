@@ -5,6 +5,7 @@ import Home from '../screens/home/Home';
 import ProductScreen from '../screens/home/ProductScreen';
 import WishListScreen from '../screens/home/WishListScreen';
 import CartScreen from '../screens/home/CartScreen';
+import OrderStatus from '../screens/home/OrderStatus';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ export default function RouteNavigation() {
       <Stack.Screen name="ProductScreen" component={ProductScreen} />
       <Stack.Screen name="WishListScreen" component={WishListScreen} />
       <Stack.Screen name="CartScreen" component={CartScreen} />
+      <Stack.Screen name="OrderStatus" component={OrderStatus} />
     </Stack.Navigator>
   );
 }

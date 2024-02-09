@@ -12,9 +12,11 @@ export default function Button({
   titleStyle,
   onPress = () => {},
   onLongPress = () => {},
+  ...props
 }) {
   return (
     <TouchableOpacity
+      {...props}
       onLongPress={onLongPress}
       onPress={onPress}
       style={{

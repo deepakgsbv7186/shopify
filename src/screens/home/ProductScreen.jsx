@@ -22,6 +22,8 @@ import {FONT} from '../../assets/fonts';
 import Button from '../../components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {addToWish, removeFromWish} from '../../app/wishlist/wishlistSlice';
+import {addToCart} from '../../app/cart/cartSlice';
+import {showMessage} from 'react-native-flash-message';
 
 export default function ProductScreen() {
   const route = useRoute();
@@ -41,15 +43,27 @@ export default function ProductScreen() {
 
   const dispatch = useDispatch();
   const {wishproducts} = useSelector(state => state.wishList);
-  const isWish = wishproducts.find(product => product?.id === id);
+  const isWished = wishproducts.find(product => product?.id === id);
+  const {cartproducts} = useSelector(state => state.cartList);
+  const isAlreadyInCart = cartproducts.find(product => product?.id === id);
 
   const discountedPrice = (price - (price / 100) * discountPercentage).toFixed(
     2,
   );
 
   const handleWish = () =>
-    isWish ? dispatch(removeFromWish(id)) : dispatch(addToWish(productDetail));
-
+    isWished
+      ? dispatch(removeFromWish(id))
+      : dispatch(addToWish(productDetail));
+  const handleAddToCart = () => {
+    dispatch(addToCart(productDetail));
+    showMessage({
+      message: 'Added successfully!',
+      icon: 'success',
+      type: 'success',
+      description: title,
+    });
+  };
   return (
     <View
       style={{
@@ -75,8 +89,8 @@ export default function ProductScreen() {
               onPress={handleWish}
               style={{...styles.headIconContainer, alignItems: 'flex-end'}}>
               <AntDesign
-                name={isWish ? 'heart' : 'hearto'}
-                color={isWish ? COLOR.red : COLOR.white}
+                name={isWished ? 'heart' : 'hearto'}
+                color={isWished ? COLOR.red : COLOR.white}
                 size={24}
               />
             </TouchableOpacity>
@@ -160,7 +174,15 @@ export default function ProductScreen() {
         </View>
       </ScrollView>
       <View style={styles.bottomBtnContainer}>
-        <Button title={'Add to cart'} bgColor={COLOR.primary} />
+        <Button
+          onPress={
+            isAlreadyInCart
+              ? () => navigation.navigate('CartScreen')
+              : handleAddToCart
+          }
+          title={isAlreadyInCart ? 'Go to cart' : 'Add to cart'}
+          bgColor={COLOR.primary}
+        />
       </View>
     </View>
   );
